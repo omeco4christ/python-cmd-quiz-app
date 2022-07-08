@@ -353,3 +353,81 @@ What's the purpose of the built-in zip() function?
 The answer is 'To iterate over two or more sequences at the same time',
     not 'To itertate over two or more sequences at the same time'
 ```
+
+
+The last question reveals another experience that can be frustrating for the user. In this example, they’ve chosen the correct alternative. However, as they were typing it, a typo snuck in. Can you make your application more forgiving?
+
+You know that the user will answer with one of the alternatives, so you just need a way for them to communicate which alternative they choose. You can add a label to each alternative and only ask the user to enter the label.
+
+Update the application to use enumerate() to print the index of each answer alternative:
+
+```
+
+# quiz.py
+
+QUESTIONS = {
+    "Which keyword do you use to loop over a given list of elements": [
+        "for", "while", "each", "loop"
+    ],
+    "What's the purpose of the built-in zip() function": [
+        "To iterate over two or more sequences at the same time",
+        "To combine several strings into one",
+        "To compress several files into one archive",
+        "To get information from the user",
+    ],
+    "What's the name of Python's sorting algorithm": [
+        "Timsort", "Quicksort", "Merge sort", "Bubble sort"
+    ],
+}
+
+for question, alternatives in QUESTIONS.items():
+    correct_answer = alternatives[0]
+    sorted_alternatives = sorted(alternatives)
+    for label, alternative in enumerate(sorted_alternatives):
+        print(f"  {label}) {alternative}")
+
+    answer_label = int(input(f"{question}? "))
+    answer = sorted_alternatives[answer_label]
+    if answer == correct_answer:
+        print("Correct!")
+    else:
+        print(f"The answer is {correct_answer!r}, not {answer!r}")
+
+```
+
+> enumerate()
+
+The enumerate() method adds a counter to an iterable and returns it (the enumerate object).
+
+
+You store the reordered alternatives as sorted_alternatives so that you can look up the full answer based on the answer label that the user enters. Recall that input() always returns a string, so you need to convert it to an integer using the int() function before you treat it as a list index.
+
+> int()
+
+The int() method converts any string, bytes-like object or a number to integer and returns.
+
+Now, it’s more convenient to answer the questions:
+
+```
+
+$ python quiz.py
+  0) each
+  1) for
+  2) loop
+  3) while
+Which keyword do you use to loop over a given list of elements? 2
+The answer is 'for', not 'loop'
+  0) To combine several strings into one
+  1) To compress several files into one archive
+  2) To get information from the user
+  3) To iterate over two or more sequences at the same time
+What's the purpose of the built-in zip() function? 3
+Correct!
+  0) Bubble sort
+  1) Merge sort
+  2) Quicksort
+  3) Timsort
+What's the name of Python's sorting algorithm? 3
+Correct!
+
+```
