@@ -68,7 +68,7 @@ for linux: python3
 
 We shall be using linux for this project. 
 
-next, the python REPL will come up in the terminal.
+next, the python shell will come up in the terminal.
 
 run the below code
 
@@ -81,3 +81,143 @@ What's your name? John Deo
 
 ```
 
+Note: remember to always close the python shell using
+
+```
+>>> quit()
+
+```
+
+
+input() takes an optional prompt that’s displayed to the user before the user enters information. In the example above, the prompt is shown in the highlighted line, and the user enters John Deo before hitting Enter. Whatever the user enters is returned from input(). This is seen in the REPL example, as the string 'John Deo' has been assigned to name.
+
+You can use input() to have Python ask you questions and check your answers. Try the following:
+
+```
+>>> answer = input("When was the first known use of the word 'quiz'? ")
+When was the first known use of the word 'quiz'? 1781
+
+>>> answer == 1781
+False
+
+>>> answer == "1781"
+True
+
+```
+The above example shows one thing that you need to be aware of: input() always returns a text string, even if that string contains only digits. As you’ll soon see, this won’t be an issue for the our quiz project. 
+
+However, if you wanted to use the result of input() for mathematical calculations, then you’d need to convert it first.
+
+Lets start building your quiz application. Open your code editor and create the file quiz.py with the following content:
+
+```
+# quiz.py
+
+answer = input("When was the first known use of the word 'quiz'? ")
+if answer == "1781":
+    print("Correct!")
+else:
+    print(f"The answer is '1781', not {answer!r}")
+
+```
+
+The bove code is very similar to what you experimented with in the python shell. 
+
+You can run your application to test the project:
+
+```
+$ python quiz.py
+When was the first known use of the word 'quiz'? 1871
+The answer is '1781', not '1871'
+
+```
+
+If you happen to give the wrong answer, then you’ll be gently corrected so that you’ll hopefully do better next time.
+
+A quiz with only one question isn’t very exciting! You can ask another question by repeating your code. Modify your code in quiz.py to look like the code below.
+
+```
+
+# quiz.py
+
+answer = input("When was the first known use of the word 'quiz'? ")
+if answer == "1781":
+    print("Correct!")
+else:
+    print(f"The answer is '1781', not {answer!r}")
+
+answer = input("Which built-in function can get information from the user? ")
+if answer == "input":
+    print("Correct!")
+else:
+    print(f"The answer is 'input', not {answer!r}")
+
+```
+
+You’ve added a question by copying and pasting the previous code then changing the question text and the correct answer. Again, you can test this by running the script:
+
+```
+$ python quiz.py
+
+When was the first known use of the word 'quiz'? 1781
+Correct!
+Which built-in function can get information from the user? get
+The answer is 'input', not 'get'
+
+```
+
+It works! However, copying and pasting code like this isn’t great. There’s a programming principle called Don’t Repeat Yourself (DRY), which says that you should usually avoid repeated code because it gets hard to maintain.
+
+Next, you’ll start improving your code to make it easier to work with.
+
+
+> Use Lists and Tuples to Avoid Repetitive Code
+
+
+Python provides several flexible and powerful data structures. You can usually replace repeated code with a tuple, a list, or a dictionary in combination with a for loop or a while loop.
+
+Instead of repeating code, you’ll treat your questions and answers as data and move them into a data structure that your code can loop over. The immediate—and often challenging—question then becomes how you should structure your data.
+
+There’s never one uniquely perfect data structure. You’ll usually choose between several alternatives. Throughout this project, you’ll revisit your choice of data structure several times as your application grows.
+
+For now, choose a fairly simple data structure:
+
+A list will hold several question elements.
+Each question element will be a two-tuple consisting of the question text and the answer.
+You can then store your questions as follows:
+
+```
+[
+    ("When was the first known use of the word 'quiz'", "1781"),
+    ("Which built-in function can get information from the user", "input"),
+]
+
+```
+This fits nicely with how you want to use your data. You’ll loop over each question, and for each question, you want access to both the question and answer.
+
+Change your quiz.py file so that you store your questions and answers in the QUESTIONS data structure:
+
+```
+# quiz.py
+
+QUESTIONS = [
+    ("When was the first known use of the word 'quiz'", "1781"),
+    ("Which built-in function can get information from the user", "input"),
+    ("Which keyword do you use to loop over a given list of elements", "for")
+]
+
+for question, correct_answer in QUESTIONS:
+    answer = input(f"{question}? ")
+    if answer == correct_answer:
+        print("Correct!")
+    else:
+        print(f"The answer is {correct_answer!r}, not {answer!r}")
+
+```
+When you run this code, it shouldn’t look any different from how it did earlier. In fact, you haven’t added any new functionality. Instead, you’ve refactored your code so that it’ll be easier to add more questions to your application.
+
+In the previous version of your code, you needed to add five new lines of code for each question that you added. Now, the for loop takes care of running those five lines for each question. To add a new question, you only need to add one line spelling out the question and the corresponding answer.
+
+Next, you’ll make your quiz application easier to use by adding answer alternatives for each question.
+
+> Provide Multiple Choices
