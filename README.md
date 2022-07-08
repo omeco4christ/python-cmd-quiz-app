@@ -126,7 +126,8 @@ The bove code is very similar to what you experimented with in the python shell.
 You can run your application to test the project:
 
 ```
-$ python quiz.py
+$ python3 quiz.py
+
 When was the first known use of the word 'quiz'? 1871
 The answer is '1781', not '1871'
 
@@ -157,7 +158,7 @@ else:
 You’ve added a question by copying and pasting the previous code then changing the question text and the correct answer. Again, you can test this by running the script:
 
 ```
-$ python quiz.py
+$ python3 quiz.py
 
 When was the first known use of the word 'quiz'? 1781
 Correct!
@@ -221,3 +222,134 @@ In the previous version of your code, you needed to add five new lines of code f
 Next, you’ll make your quiz application easier to use by adding answer alternatives for each question.
 
 > Provide Multiple Choices
+
+Using input() is a great way to read input from your user. However, the way you’re currently using it can end up being frustrating. For example, someone may answer one of your questions like this:
+
+```
+
+Which built-in function can get information from the user? input()
+The answer is 'input', not 'input()'
+
+```
+
+Should they will really be marked wrong because they included the parentheses to indicate that the function is callable? You can take away a lot of guesswork for the users by giving them alternatives. For example:
+
+```
+- get
+  - input
+  - print
+  - write
+Which built-in function can get information from the user? input
+Correct!
+
+```
+
+Here, the alternatives show that you expect the answer to be entered without parentheses. In the example, the alternatives are listed before the question. This is a bit counterintuitive, but it’s easier to implement into your current code. You’ll improve this in the next step.
+
+In order to implement answer alternatives, you need your data structure to be able to record three pieces of information for each question:
+
+* The question text
+* The correct answer
+* Answer alternatives
+
+
+It’s time to revisit QUESTIONS for the first—but not the last—time and make some changes to it. It makes sense to store the answer alternatives in a list, as there can be any number of them and you just want to display them to the screen. Furthermore, you can treat the correct answer as one of the answer alternatives and include it in the list, as long as you’re able to retrieve it later.
+
+You decide to change QUESTIONS to a dictionary where the keys are your questions and the values are the lists of answer alternatives. You consistently put the correct answer as the first item in the list of alternatives so that you can identify it.
+
+Note: You could continue to use a list of two-tuples to hold your questions. In fact, you’re only iterating over the questions and answers, not looking up the answers by using a question as a key. Therefore, you could argue that the list of tuples is a better data structure for your use case than a dictionary.
+
+However, you use a dictionary because it looks better visually in your code, and the roles of questions and answer alternatives are more distinct.
+
+You update your code to loop over each item in your newly minted dictionary. For each question, you pick out the correct answer from the alternatives, and you print out all the alternatives before asking the question:
+
+```
+
+# quiz.py
+
+QUESTIONS = {
+    "When was the first known use of the word 'quiz'": [
+        "1781", "1771", "1871", "1881"
+    ],
+    "Which built-in function can get information from the user": [
+        "input", "get", "print", "write"
+    ],
+    "Which keyword do you use to loop over a given list of elements": [
+        "for", "while", "each", "loop"
+    ],
+    "What's the purpose of the built-in zip() function": [
+        "To iterate over two or more sequences at the same time",
+        "To combine several strings into one",
+        "To compress several files into one archive",
+        "To get information from the user",
+    ],
+}
+
+for question, alternatives in QUESTIONS.items():
+    correct_answer = alternatives[0]
+    for alternative in sorted(alternatives):
+        print(f"  - {alternative}")
+
+    answer = input(f"{question}? ")
+    if answer == correct_answer:
+        print("Correct!")
+    else:
+        print(f"The answer is {correct_answer!r}, not {answer!r}")
+
+```
+
+If you always showed the correct answer as the first alternative, then your users would soon catch on and be able to guess the correct answer every time. Instead, you change the order of the alternatives by sorting them using the sorted() function. 
+
+> Syntax of sorted()
+
+```
+sorted(iterable, key=None, reverse=False)
+
+```
+> sorted() Parameters
+
+The sorted() function takes a maximum of three paramenters:
+
+* iterable - A sequence (string, tuple, list) or collection (set, dictionary, frozen set) or any other iterator.
+
+* reverse (Optional) - If True, the sorted list is reversed (or sorted in descending order). Defaults to False if not provided.
+
+* key (Optional) - A function that serves as a key for the sort comparison. Defaults to None.
+
+> sorted() Return Value
+
+The sorted() function returns a sorted list.
+
+> item()
+
+On the other hand, The items() method returns a view object. The view object contains the key-value pairs of the dictionary, as tuples in a list.
+
+The view object will reflect any changes done to the dictionary, see example below.
+
+```
+dictionary.items()
+
+```
+
+Test your application:
+
+```
+$ python3 quiz.py
+  - 1771
+  - 1781
+  - 1871
+  - 1881
+When was the first known use of the word 'quiz'? 1781
+Correct!
+
+...
+
+  - To combine several strings into one
+  - To compress several files into one archive
+  - To get information from the user
+  - To iterate over two or more sequences at the same time
+What's the purpose of the built-in zip() function?
+    To itertate over two or more sequences at the same time
+The answer is 'To iterate over two or more sequences at the same time',
+    not 'To itertate over two or more sequences at the same time'
+```
