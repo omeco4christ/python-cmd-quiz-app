@@ -24,16 +24,7 @@ def run_quiz():
     print(f"\nYou got {num_correct} correct out of {num} questions")
 
 def prepare_questions(path, num_questions):
-    topic_info = tomllib.loads(path.read_text())
-    topics = {
-        topic["label"]: topic["questions"] for topic in topic_info.values()
-    }
-    topic_label = get_answers(
-        question="Which topic do you want to be quizzed about",
-        alternatives=sorted(topics),
-    )[0]
-
-    questions = topics[topic_label]
+    questions = tomllib.loads(path.read_text())["questions"]
     num_questions = min(num_questions, len(questions))
     return random.sample(questions, k=num_questions)
 

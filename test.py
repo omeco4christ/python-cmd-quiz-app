@@ -35,21 +35,31 @@ QUESTIONS = {
 
 
 for question, alternatives in QUESTIONS.items():
-    correct_answer = alternatives[0]
-    sorted_alternatives = random.sample(alternatives, 4)
-    # for label, alternative in zip(string.ascii_uppercase, sorted_alternatives):
-    for label, alternative in zip(string.ascii_lowercase, sorted_alternatives):
-        print(f"  {label}) {alternative}")
 
+    # Thes correct answer is the first index
+    correct_answer = alternatives[0]
+
+    # jumble the options so that they will appear in different ordering
+    sorted_alternatives = random.sample(alternatives, 4)
+
+    # for label, alternative in zip(string.ascii_uppercase, sorted_alternatives):
+    # Change the options from number to alphabet
+    for label, alternative in zip(string.ascii_lowercase, sorted_alternatives):
+        print(f"{label}) {alternative!r}")
+
+    # input the users choice
     answer_label = int(input(f"{question}? "))
 
+    # If the user chooses options that is not within the scope
     if answer_label > 3 or answer_label < 0:
         print(f"Choose any of {sorted_alternatives!r}")
     else:
+        # output correct if the answer is correct
         answer = sorted_alternatives[answer_label]
         if answer == correct_answer:
             print("Correct!")
         else:
+            # provide the user with the correct answer is they where wrong
             print(f"The answer is {correct_answer!r}, not {answer!r}")
 
 
